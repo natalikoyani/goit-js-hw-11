@@ -8,7 +8,7 @@ const loadMoreButton = document.querySelector('.load-more');
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '39228988-9f38d0df7f0bcbddd9d36da69';
 let page = 1;
-let per_page = 5;
+let per_page = 40;
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreButton.addEventListener('click', handleClick);

@@ -1,9 +1,5 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
 
-.is-hidden{
-    display: none;
-}
-
 .form-container{
     margin-bottom: 20px;
     padding: 10px;
@@ -74,4 +70,8 @@
     border: 0.1px solid transparent;
     border-radius: 3px;
     box-shadow: 0 3px 5px gray;
+}
+
+.is-hidden{
+    display: none;
 }

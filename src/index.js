@@ -15,24 +15,18 @@ loadMoreButton.addEventListener('click', handleClick);
 
 async function handleSubmit(evt) {
     evt.preventDefault();
-    const form = evt.currentTarget;
-    const q = form.elements.searchQuery.value.replaceAll(' ', '+');
-    page = 1;
     gallery.innerHTML = '';
     loadMoreButton.classList.add('is-hidden');
+    page = 1;
+    const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
     
     try {
-      const images = await fetchImages(q);
-      if (images.length === 0) {
+      const data = await fetchImages(q);
+      if (data.hits.length === 0) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
       } else {
-        gallery.innerHTML = createMarkup(images);
+        gallery.innerHTML = createMarkup(data.hits);
         loadMoreButton.classList.remove('is-hidden');
-        const totalPages = response.data.totalHits / per_page;
-        if(page >= totalPages) {
-          loadMoreButton.classList.add('is-hidden');
-          Notify.info("We're sorry, but you've reached the end of search results.");
-        }
       }
     } catch(err) {
       console.error(err);
@@ -40,10 +34,22 @@ async function handleSubmit(evt) {
     }
 }
 
-function handleClick() {
-  page +=1
-  fetchImages();
-  gallery.insertAdjacentHTML('beforeend', createMarkup());
+async function handleClick() {
+  page += 1;
+  const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
+  try {
+    const data = await fetchImages(q);
+    const totalPages = data.totalHits / per_page;
+        if(page >= totalPages) {
+          loadMoreButton.classList.add('is-hidden');
+          Notify.info("We're sorry, but you've reached the end of search results.");
+        } else {
+          gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+        }
+  } catch (err) {
+    console.error(err);
+    Notify.failure("An error occurred while fetching more images. Please try again later.");
+  }
 }
 
 async function fetchImages(q) {
@@ -57,8 +63,7 @@ async function fetchImages(q) {
         page: page,
     });
     const response = await axios.get(`${BASE_URL}?${searchParams}`);
-    console.log(response);
-    return response.data.hits;
+    return response.data;
 }
 
 function createMarkup(arr) {

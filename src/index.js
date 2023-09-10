@@ -73,16 +73,16 @@ function createMarkup(arr) {
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
           <p class="info-item">
-            <b>Likes ${likes}</b>
+            <b>Likes <span class="info-span">${likes}</span></b>
           </p>
           <p class="info-item">
-            <b>Views ${views}</b>
+            <b>Views <span class="info-span">${views}</span></b>
           </p>
           <p class="info-item">
-            <b>Comments ${comments}</b>
+            <b>Comments <span class="info-span">${comments}</span></b>
           </p>
           <p class="info-item">
-            <b>Downloads ${downloads}</b>
+            <b>Downloads <span class="info-span">${downloads}</span></b>
           </p>
         </div>
       </div>`

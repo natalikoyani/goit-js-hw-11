@@ -18,12 +18,14 @@ async function handleSubmit(evt) {
     gallery.innerHTML = '';
     loadMoreButton.classList.add('is-hidden');
     page = 1;
-    const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
+    const q = searchForm.elements.searchQuery.value.trim().replaceAll(' ', '+').trim();
     
     try {
       const data = await fetchImages(q);
       if (data.hits.length === 0) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+      } else if(q === '') {
+        Notify.failure("Search field can't be empty!");
       } else {
         gallery.innerHTML = createMarkup(data.hits);
         loadMoreButton.classList.remove('is-hidden');

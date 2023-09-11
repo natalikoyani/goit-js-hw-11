@@ -26,13 +26,14 @@ async function handleSubmit(evt) {
     evt.preventDefault();
     gallery.innerHTML = '';
     page = 1;
-    const q = searchForm.elements.searchQuery.value.trim().replaceAll(' ', '+').trim();
+    const q = searchForm.elements.searchQuery.value.trim().replaceAll(' ', '+');
+    observer.unobserve(guard);
     
     try {
       const data = await fetchImages(q);
       if (data.hits.length === 0) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-      } else if(q === '') {
+      } else if (q === '') {
         Notify.failure("Search field can't be empty!");
       } else {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
@@ -49,19 +50,6 @@ async function handleSubmit(evt) {
       Notify.failure("An error occurred while fetching images. Please try again later.");
     }
 }
-
-// async function handleClick() {
-//   page += 1;
-//   const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
-//   try {
-//     const data = await fetchImages(q);
-//     const totalPages = Math.ceil(data.totalHits / per_page);
-//     gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
-//   } catch (err) {
-//     console.error(err);
-//     Notify.failure("An error occurred while fetching more images. Please try again later.");
-//   }
-// }
 
 async function fetchImages(q) {
     const searchParams = new URLSearchParams({
@@ -122,7 +110,7 @@ async function handlerLoadMore(entries) {
         gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
         const totalPages = Math.ceil(data.totalHits / per_page);
         if(page >= totalPages){
-          observer.unobserve(elements.guard);
+          observer.unobserve(guard);
         }
       } catch (err) {
         console.error(err);

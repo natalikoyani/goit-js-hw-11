@@ -23,13 +23,13 @@ async function handleSubmit(evt) {
     gallery.innerHTML = '';
     loadMoreButton.classList.add('is-hidden');
     page = 1;
-    const q = searchForm.elements.searchQuery.value.trim().replaceAll(' ', '+').trim();
+    const q = searchForm.elements.searchQuery.value.trim().replaceAll(' ', '+');
     
     try {
       const data = await fetchImages(q);
       if (data.hits.length === 0) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-      } else if(q === '') {
+      } else if (q === '') {
         Notify.failure("Search field can't be empty!");
       } else {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)

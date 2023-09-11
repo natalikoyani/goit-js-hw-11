@@ -1,5 +1,8 @@
 import axios from "axios";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+let lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250, });
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -9,6 +12,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '39228988-9f38d0df7f0bcbddd9d36da69';
 let page = 1;
 let per_page = 50;
+
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreButton.addEventListener('click', handleClick);
@@ -29,6 +33,7 @@ async function handleSubmit(evt) {
       } else {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
         gallery.innerHTML = createMarkup(data.hits);
+        lightbox.refresh();
         loadMoreButton.classList.remove('is-hidden');
       }
     } catch(err) {
@@ -66,15 +71,14 @@ async function fetchImages(q) {
         page: page,
     });
     const response = await axios.get(`${BASE_URL}?${searchParams}`);
-    console.log(response.data);
     return response.data;
 }
 
 function createMarkup(arr) {
     return arr
     .map(
-        ({ webformatURL, tags, likes, views, comments, downloads }) => `<div class="photo-card">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        ({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => `<div class="photo-card">
+        <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy"/></a>
         <div class="info">
           <p class="info-item">
             <b>Likes <span class="info-span">${likes}</span></b>

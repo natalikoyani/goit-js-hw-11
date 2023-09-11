@@ -48,11 +48,10 @@ async function handleClick() {
   try {
     const data = await fetchImages(q);
     const totalPages = Math.ceil(data.totalHits / per_page);
-        if(page > totalPages) {
+    gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+        if(page >= totalPages) {
           loadMoreButton.classList.add('is-hidden');
           Notify.info("We're sorry, but you've reached the end of search results.");
-        } else {
-          gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
         }
   } catch (err) {
     console.error(err);

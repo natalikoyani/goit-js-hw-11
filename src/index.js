@@ -2,7 +2,7 @@ import axios from "axios";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-let lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250, });
+
 
 const searchForm = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -10,9 +10,22 @@ const loadMoreButton = document.querySelector('.load-more');
 
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '39228988-9f38d0df7f0bcbddd9d36da69';
-let page = 1;
-let per_page = 50;
 
+let page = 1;
+let per_page = 40;
+
+let lightbox = new SimpleLightbox('.gallery a', { captionDelay: 250, });
+
+function smoothScroll() {
+  const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
+}
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreButton.addEventListener('click', handleClick);
@@ -34,6 +47,7 @@ async function handleSubmit(evt) {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
         gallery.innerHTML = createMarkup(data.hits);
         lightbox.refresh();
+        smoothScroll();
         loadMoreButton.classList.remove('is-hidden');
       }
     } catch(err) {
@@ -49,6 +63,7 @@ async function handleClick() {
     const data = await fetchImages(q);
     const totalPages = Math.ceil(data.totalHits / per_page);
     gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+    smoothScroll();
         if(page >= totalPages) {
           loadMoreButton.classList.add('is-hidden');
           Notify.info("We're sorry, but you've reached the end of search results.");

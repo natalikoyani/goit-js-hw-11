@@ -8,7 +8,7 @@ const loadMoreButton = document.querySelector('.load-more');
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '39228988-9f38d0df7f0bcbddd9d36da69';
 let page = 1;
-let per_page = 40;
+let per_page = 50;
 
 searchForm.addEventListener('submit', handleSubmit);
 loadMoreButton.addEventListener('click', handleClick);
@@ -41,8 +41,8 @@ async function handleClick() {
   const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
   try {
     const data = await fetchImages(q);
-    const totalPages = data.totalHits / per_page;
-        if(page >= totalPages) {
+    const totalPages = Math.ceil(data.totalHits / per_page);
+        if(page > totalPages) {
           loadMoreButton.classList.add('is-hidden');
           Notify.info("We're sorry, but you've reached the end of search results.");
         } else {
@@ -65,6 +65,7 @@ async function fetchImages(q) {
         page: page,
     });
     const response = await axios.get(`${BASE_URL}?${searchParams}`);
+    console.log(response.data);
     return response.data;
 }
 

@@ -27,6 +27,7 @@ async function handleSubmit(evt) {
       } else if(q === '') {
         Notify.failure("Search field can't be empty!");
       } else {
+        Notify.info(`Hooray! We found ${data.totalHits} images.`)
         gallery.innerHTML = createMarkup(data.hits);
         loadMoreButton.classList.remove('is-hidden');
       }

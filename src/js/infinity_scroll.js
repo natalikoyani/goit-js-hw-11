@@ -108,6 +108,7 @@ async function handlerLoadMore(entries) {
       try {
         const data = await fetchImages(q);
         gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+        lightbox.refresh();
         const totalPages = Math.ceil(data.totalHits / per_page);
         if(page >= totalPages){
           observer.unobserve(guard);

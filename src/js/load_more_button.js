@@ -49,9 +49,10 @@ async function handleClick() {
   const q = searchForm.elements.searchQuery.value.replaceAll(' ', '+');
   try {
     const data = await fetchImages(q);
-    const totalPages = Math.ceil(data.totalHits / per_page);
     gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+    lightbox.refresh();
     smoothScroll();
+    const totalPages = Math.ceil(data.totalHits / per_page);
         if(page >= totalPages) {
           loadMoreButton.classList.add('is-hidden');
           Notify.info("We're sorry, but you've reached the end of search results.");
